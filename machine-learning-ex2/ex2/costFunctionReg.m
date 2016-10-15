@@ -18,8 +18,12 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 
 
+% theta(2:end)で2行目から最後の行まで抜き出す
+J = (1 / m) * sum(-y' * log(sigmoid(X * theta)) - (1 - y)' * log(1 - sigmoid(X * theta))) + (lambda / (2 * m)) * sum(theta(2:end) .^ 2);
 
-
+% sumで各行が足されるので、横のベクトルになる
+grad = (1 / m) * sum(X .* repmat(sigmoid(X * theta) - y, 1, size(X, 2))) + (lambda / m) .* theta';
+grad(1) = (1 / m) * sum((sigmoid(X * theta) - y) .* X(:, 1));
 
 
 % =============================================================

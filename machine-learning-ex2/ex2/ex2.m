@@ -130,6 +130,9 @@ fprintf(['For a student with scores 45 and 85, we predict an admission ' ...
 % Compute accuracy on our training set
 p = predict(theta, X);
 
+% 実際のデータセットを与えて、どの程度正確かを出している
+% p == yの場合1を返すので、予測したpと実際の答えyがどの程度あっているかを、1の数で把握できる
+% meanでベクトルの値を全て足し合わせた平均が出るので、0.89などのような値となる
 fprintf('Train Accuracy: %f\n', mean(double(p == y)) * 100);
 
 fprintf('\nProgram paused. Press enter to continue.\n');
