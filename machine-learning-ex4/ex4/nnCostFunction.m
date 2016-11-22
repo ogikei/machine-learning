@@ -63,20 +63,55 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+% input_layer_size -> 2
+% hidden_layer_size -> 4
 
+% Theta1 -> 4 * 3
+% Theta2 -> 4 * 5
+% X -> 16 * 2
+% y -> 16 * 1
 
+% a1 -> 16 * 3
+A1 = [ones(m, 1) X];
+Z2 = A1 * Theta1';
+% a2 -> 16 * 4
+A2 = sigmoid(Z2);
+% a3 -> 16 * 5
+A2 = [ones(size(Z2), 1) sigmoid(Z2)];
+% z3 -> 16 * 4
+Z3 = A2 * Theta2';
+% a3 -> 16 * 4
+A3 = sigmoid(Z3);
 
+% Y -> 16 * 4
+Y = zeros(m, num_labels);
+% Create mateix Y
+% Y -> 16 * 4
+for i = 1:m
+  Y(i, y(i)) = 1;
 
+% 結局全部足すので、sumを単純に2つつけている
+Jreg = lambda / (2 * m) * (sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2)));
+J = 1 / m * sum(sum(-Y .* log(A3) - (1 - Y) .* log(1 - A3))) + Jreg;
 
+% delta3 -> 16 * 4
+delta3 = A3 - Y;
 
+% delta2 -> 16 * 5 -> 16 * 4
+% delta2の最初の要素はバイアスユニットで必要ないので消す
+delta2 = (delta3 * Theta2 .* sigmoidGradient([ones(size(Z2), 1) Z2]))(:, 2:end);
 
+% Delta2 -> 4 * 5
+Delta2 = delta3' * A2;
 
+% j = 0以外の時のものを計算
+Theta2_grad = 1 / m * Delta2 + lambda / m * [zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
 
+% Theta1_grad -> 4 * 5
+Delta1 = delta2' * A1;
 
-
-
-
-
+% 
+Theta1_grad = 1 / m * Delta1 + lambda / m * [zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
 
 
 
