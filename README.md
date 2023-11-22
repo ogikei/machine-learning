@@ -1,6 +1,2 @@
 machine-learning
 ================
-
-machine-learning
-
-================
